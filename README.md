@@ -1,2 +1,2 @@
-# LearningConnectvity_v2
+# LearningConnectivity_v2
 Now with un-borked file hierarchy!
