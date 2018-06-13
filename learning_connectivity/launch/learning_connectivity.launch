@@ -1,0 +1,44 @@
+<launch>
+<!-- This file's purpose is to make our lives easier by launching all the necessary nodes that enable 
+the functioning of our application. As of May 29,2018, this includes:
+
+- mocap_optitrack/mocap
+- learning_connectivity/worldToOdom_tf
+- learning_connectivity/convertMocapToOdom
+
+-->
+
+	<include file="$(find mocap_optitrack)/launch/mocap.launch"></include>
+	<!-- <include file="$(find teb_local_planner)/launch/test_optim_node.launch"></include> -->
+
+	<param name="/slam_gmapping/minimumScore" type="double" value="50.0" />
+	<!--<param name="/use_sim_time" type="bool" value="true" /> -->
+
+
+
+	<node pkg="learning_connectivity"
+		  type="robot1-baselink-tf.py"
+		  name="tf_robot1_baselink"
+		  respawn="false"
+		  required="false">
+	</node> 
+
+
+	<!-- <node pkg="learning_connectivity"
+		  type="waypoint-broadcaster.py"
+		  name="waypoint-broadcaster"
+		  respawn="false"
+		  required="false"> 
+	</node>-->
+	<!--<node pkg="learning_connectivity"
+		  type="convertMocapToOdom.py"
+		  name="convertMocapToOdom"
+		  respawn="false"
+		  required="false">
+	</node>-->
+
+
+
+
+
+</launch>
