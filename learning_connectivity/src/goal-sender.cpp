@@ -50,6 +50,8 @@ void read_trajectory(std::string filename){
   else{
     std::cout << "Could not open trajectory file: " << filename << std::endl;
   }
+  
+  file.close();
 
 
 
@@ -101,9 +103,15 @@ void getCustomTrajectory(){
     std::cout << "Continue? (Y/N): ";
     std::cin >> cont_char;
 
-    if(cont_char == 'N'){ cont = false;}
-    else if(cont_char == 'Y'){ continue; }
-
+    if(cont_char == 'N' or cont_char =='n'){ 
+      cont = false;}
+    else if(cont_char == 'Y' or cont_char =='y'){ 
+      pointNum ++;
+      continue;
+    }
+    else{
+      std::cout << "Please enter 'Y/y' or 'N/n' for your choice" << std::endl;
+    }
   }
 
 }
@@ -111,6 +119,8 @@ void getCustomTrajectory(){
 
 int main(int argc, char** argv){
   ros::init(argc, argv, "navigation_goals");
+
+  ros::NodeHandle nh;
 
   //Read trajectory file, if specified.
   if(argc == 2){
@@ -133,7 +143,7 @@ int main(int argc, char** argv){
   while(!ac.waitForServer(ros::Duration(5.0))){
     ROS_INFO("Waiting for the move_base action server to come up");
   }
-  std::cout<< "Here!" << std::endl;
+  //std::cout<< "Here!" << std::endl;
 
   for(int i = 0; i < goals.size(); i++){
       move_base_msgs::MoveBaseGoal goal = goals[i];
@@ -147,6 +157,7 @@ int main(int argc, char** argv){
         ROS_INFO("Achieved goal point");
       else
         ROS_INFO("Did not achieve goal point");
+
 
 }
 

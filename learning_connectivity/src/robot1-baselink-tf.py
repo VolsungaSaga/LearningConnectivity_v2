@@ -3,6 +3,7 @@
 import rospy
 import roslib
 import tf
+import math
 
 import tf2_ros
 
@@ -33,7 +34,8 @@ class Robot1BaseLink_tf:
 
 
     def robot1ToBaseFootprint_tf_callback(self, msg):
-        #We supply a transformation from Robot1 to the base_footprint
+        #We supply a transformation from Robot1 to the base_footprint. We consider this transformation to be a 
+        # rotation and translation of 0 radians / meters in all axes.
         br = tf2_ros.TransformBroadcaster()
         self.tf_robotToBase.header.stamp = rospy.Time.now()
 
@@ -66,6 +68,20 @@ class Robot1BaseLink_tf:
         self.tf_worldToRobot.transform.rotation.y = msg.pose.orientation.y
         self.tf_worldToRobot.transform.rotation.z = msg.pose.orientation.z
         self.tf_worldToRobot.transform.rotation.w = msg.pose.orientation.w
+
+        #I think we need to negate the yaw rotation part.
+        quat = self.tf_worldToRobot.transform.rotation
+        quat_list = [quat.x, quat.y,quat.z,quat.w]
+        roll, pitch, yaw = euler_from_quaternion(quat_list)
+        yaw = (yaw - math.pi)
+        quat = quaternion_from_euler(roll, pitch, yaw)
+
+        self.tf_worldToRobot.transform.rotation.x = quat[0]
+        self.tf_worldToRobot.transform.rotation.y = quat[1]
+        self.tf_worldToRobot.transform.rotation.z = quat[2]
+        self.tf_worldToRobot.transform.rotation.w = quat[3]
+
+
 
         br.sendTransform(self.tf_worldToRobot)
 
